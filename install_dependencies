@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+echo "Starting dependency installation..."
+
+# Detect package manager and install web server
+if command -v apt-get &> /dev/null; then
+    echo "Ubuntu/Debian system detected - using apt"
+    apt-get update -y
+    apt-get install -y apache2
+    SERVICE_NAME="apache2"
+elif command -v yum &> /dev/null; then
+    echo "Amazon Linux/RHEL system detected - using yum" 
+    yum update -y
+    yum install -y httpd
+    SERVICE_NAME="httpd"
+else
+    echo "Error: No supported package manager found"
+    exit 1
+fi
+
+# Clean destination directory
+echo "Cleaning destination directory..."
+rm -rf /var/www/html/* 2>/dev/null || true
+
+# Ensure directory exists with proper permissions
+mkdir -p /var/www/html/
+chown -R www-data:www-data /var/www/html/ 2>/dev/null || chown -R apache:apache /var/www/html/ 2>/dev/null
+chmod -R 755 /var/www/html/
+
+# Start web server
+systemctl enable $SERVICE_NAME
+systemctl start $SERVICE_NAME
+
+echo "Dependency installation completed successfully"
+exit 0
