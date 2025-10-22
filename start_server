@@ -1,4 +1,3 @@
 #!/bin/bash
-echo "Starting web server..."
-systemctl start apache2 2>/dev/null || systemctl start httpd 2>/dev/null || true
-echo "Server started"
+service httpd start
+

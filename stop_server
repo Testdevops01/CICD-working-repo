@@ -1,4 +1,6 @@
 #!/bin/bash
-echo "Stopping web server..."
-systemctl stop apache2 2>/dev/null || systemctl stop httpd 2>/dev/null || true
-echo "Server stopped"
+isExistApp = `pgrep httpd`
+if [[ -n  $isExistApp ]]; then
+    service httpd stop        
+fi
+
