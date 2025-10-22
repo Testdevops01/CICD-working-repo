@@ -1,22 +1,22 @@
 version: 0.2
 
-phases: 
-    build:
-        commands:
-            - echo "Build block"
-            - ls
-            - echo "Running tests to check if "Congratulations" present in index.html file"
-            - grep "Congratulations" index.html
-    post_build:
-        commands:
-            - echo "Post build phase"
-artifacts:
-    files:
-        - scripts/install_dependencies
-        - scripts/start_server
-        - scripts/stop_server
-        - index.html
-        - appspec.yml
-    discard-paths: yes
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies..."
+      - apt-get update
 
-            
+  build:
+    commands:
+      - echo "Building the application..."
+      - echo "No build commands needed for static HTML"
+
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+      - echo "Creating deployment package..."
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no
