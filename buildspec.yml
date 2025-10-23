@@ -7,9 +7,8 @@ phases:
   install:
     commands:
       - echo "Installing dependencies..."
-      - apt-get update
-      - apt-get install -y zip
-
+      - yum update -y
+      - yum install -y zip unzip
   build:
     commands:
       - echo "Building the application..."
