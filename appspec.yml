@@ -1,22 +1,37 @@
-version: 0.0
-os: linux
+version: 0.2
 
-files:
-  - source: index.html
-    destination: /var/www/html/
+env:
+  image: aws/codebuild/standard:7.0
 
-hooks:
-  ApplicationStop:
-    - location: scripts/application_stop.sh
-      timeout: 300
-      runas: root
-      
-  BeforeInstall:
-    - location: scripts/install_dependencies.sh
-      timeout: 300
-      runas: root
+phases:
+  install:
+    commands:
+      - echo "=== Installing build dependencies ==="
+      - apt-get update
+      - apt-get install -y zip
 
-  ApplicationStart:
-    - location: scripts/start_server.sh
-      timeout: 300
-      runas: root
+  pre_build:
+    commands:
+      - echo "=== Pre-build phase ==="
+      - echo "Current directory: $(pwd)"
+      - echo "Directory contents:"
+      - ls -la
+
+  build:
+    commands:
+      - echo "=== Building application ==="
+      - echo "Static HTML - no build process needed"
+
+  post_build:
+    commands:
+      - echo "=== Post-build phase ==="
+      - echo "Build completed on $(date)"
+      - echo "Creating deployment archive..."
+      - zip -r deployment.zip . -x "*.git*" "*.github*" "*.DS_Store"
+      - echo "Build artifacts prepared"
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: .
+  discard-paths: no
