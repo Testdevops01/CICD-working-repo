@@ -1,29 +1,17 @@
 #!/bin/bash
-echo "Starting application server..."
+echo "Starting Apache HTTPD..."
 
-# Stop Apache if it's running (it uses port 80)
-if systemctl is-active --quiet apache2; then
-    echo "Stopping Apache to free port 80..."
-    sudo systemctl stop apache2
-    sudo systemctl disable apache2
-fi
+# Start Apache
+service httpd start
 
-# Stop any existing nginx
-sudo systemctl stop nginx 2>/dev/null || true
+# Enable Apache to start on boot
+chkconfig httpd on
 
-# Start and enable nginx
-sudo systemctl start nginx
-sudo systemctl enable nginx
-
-# Wait for nginx to start
+# Verify Apache is running
 sleep 3
-
-# Check if nginx is running
-if systemctl is-active --quiet nginx; then
-    echo "✅ Nginx started successfully"
-    echo "Application is now running on port 80"
+if pgrep httpd > /dev/null; then
+    echo "Apache started successfully"
 else
-    echo "❌ Failed to start nginx"
-    sudo systemctl status nginx --no-pager
+    echo "ERROR: Apache failed to start"
     exit 1
 fi
