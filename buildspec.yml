@@ -1,7 +1,7 @@
 version: 0.2
 
 env:
-  image: aws/codebuild/standard:7.0
+  image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
 
 phases:
   install:
@@ -9,6 +9,7 @@ phases:
       - echo "Installing dependencies..."
       - yum update -y
       - yum install -y zip unzip
+
   build:
     commands:
       - echo "Building the application..."
